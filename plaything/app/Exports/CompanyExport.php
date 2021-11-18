@@ -8,29 +8,38 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class CompanyExport implements FromCollection, WithMapping, ShouldAutoSize, WithStyles//, WithEvents
+class CompanyExport implements WithHeadings, ShouldAutoSize, WithStyles//, WithEvents
 {
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
-    {
-        return Company::all();
-    }
+    // public function collection()
+    // {
+    //     return [0];
+    // }
 
-    public function map($companies):array{
-        return[
-            $companies->name
-        ];
+    // public function map($companies):array{
+    //     return null;
+    // }
+
+    //works
+    public function headings():array{
+        $companies=Company::get();
+        $data = array();
+        foreach($companies as $company){
+            array_push($data,$company->name);
+        }
+        return $data;
     }
 
     public function styles(Worksheet $sheet)
     {
             // Style the first row as bold text.
-            $sheet->getStyle('A1')->getFont()->setBold(true);
+            $sheet->getStyle(1)->getFont()->setBold(true);
 
             // Styling a specific cell by coordinate.
             //'B2' => ['font' => ['italic' => true]],
