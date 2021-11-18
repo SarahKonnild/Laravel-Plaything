@@ -15,7 +15,7 @@
                     @endif
 
                     {{ __('Welcome, please feel free to download this totally not-shady excel file!') }}
-                    <button class="btn btn-primary">Download me!</button>
+                    <a href="{{ url('/export')}}">Click here to download</a>.
                     {{__('I promise, it is just an excel file with random data...')}}
                 </div>
             </div>
