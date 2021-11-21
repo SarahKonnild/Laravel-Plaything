@@ -3,13 +3,9 @@
 namespace App\Exports;
 
 use App\Models\Company;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class CompanyExport implements WithHeadings, ShouldAutoSize, WithStyles//, WithEvents
@@ -17,22 +13,39 @@ class CompanyExport implements WithHeadings, ShouldAutoSize, WithStyles//, WithE
     /**
     * @return \Illuminate\Support\Collection
     */
-    // public function collection()
-    // {
-    //     return [0];
-    // }
+    public function collection()
+    {
+        return;
+    }
 
-    // public function map($companies):array{
-    //     return null;
-    // }
+    public function makeRandomDates($times):array{
+        $dates = array();
+        
+        $first_date="2021-01-01 00:00:00";
+        $second_date="2021-12-31 23:59:999";
+        
+        for($i = 0; $i <= $times; $i++){
+            $rand_time=rand($first_date, $second_date);
+            $rand_date=date('Y-m-d g:i:s', $rand_time);
+            array_push($dates, $rand_date);
+        }
+        return $dates;
+    }
+
+    public function map($data):array{
+        return array();
+    }
 
     //works
     public function headings():array{
         $companies=Company::get();
-        $data = array();
+        $data = array('Date');
         foreach($companies as $company){
             array_push($data,$company->name);
         }
+        array_push($data, 'Total');
+        array_push($data, 'Diff 2020');
+
         return $data;
     }
 
@@ -40,11 +53,5 @@ class CompanyExport implements WithHeadings, ShouldAutoSize, WithStyles//, WithE
     {
             // Style the first row as bold text.
             $sheet->getStyle(1)->getFont()->setBold(true);
-
-            // Styling a specific cell by coordinate.
-            //'B2' => ['font' => ['italic' => true]],
-
-            // Styling an entire column.
-            //'C'  => ['font' => ['size' => 16]],
     }
 }
